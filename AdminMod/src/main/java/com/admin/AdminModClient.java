@@ -8,13 +8,9 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.text.Text;
-
-import static com.mojang.brigadier.arguments.StringArgumentType.word;
-import static com.mojang.brigadier.builder.LiteralArgumentBuilder.literal;
-import static com.mojang.brigadier.builder.ArgumentBuilder.argument;
+import com.mojang.brigadier.arguments.StringArgumentType;
 
 public class AdminModClient implements ClientModInitializer {
-
     private static boolean isFollowing = false;
     private static boolean isMining = false;
     private static String targetAdminName = "Admin";
@@ -22,36 +18,46 @@ public class AdminModClient implements ClientModInitializer {
     @Override
     public void onInitializeClient() {
         ClientCommandRegistrationCallback.EVENT.register((dispatcher, registryAccess) -> {
-            
-            dispatcher.register(literal("admin")
-                .then(argument("name", word())
+
+            // /admin <isim>
+            dispatcher.register(ClientCommandManager.literal("admin")
+                .then(ClientCommandManager.argument("name", StringArgumentType.word())
                     .executes(context -> {
-                        targetAdminName = com.mojang.brigadier.arguments.StringArgumentType.getString(context, "name");
+                        targetAdminName = StringArgumentType.getString(context, "name");
                         context.getSource().sendFeedback(Text.literal("§b[AdminMod] Hedef admin ayarlandı: " + targetAdminName));
                         return 1;
                     })
                 )
             );
 
-            dispatcher.register(literal("takip").executes(context -> {
-                isFollowing = !isFollowing;
-                isMining = false;
-                context.getSource().sendFeedback(Text.literal("§a[AdminMod] Takip Modu (" + targetAdminName + "): " + (isFollowing ? "Aktif" : "Kapalı")));
-                return 1;
-            }));
+            // /takip
+            dispatcher.register(ClientCommandManager.literal("takip")
+                .executes(context -> {
+                    isFollowing = !isFollowing;
+                    isMining = false;
+                    context.getSource().sendFeedback(Text.literal("§a[AdminMod] Takip Modu (" + targetAdminName + "): " + (isFollowing ? "Aktif" : "Kapalı")));
+                    return 1;
+                })
+            );
 
-            dispatcher.register(literal("kaz").executes(context -> {
-                isMining = !isMining;
-                isFollowing = false;
-                context.getSource().sendFeedback(Text.literal("§a[AdminMod] 10x10 Kazı Modu: " + (isMining ? "Aktif" : "Kapalı")));
-                return 1;
-            }));
+            // /kaz
+            dispatcher.register(ClientCommandManager.literal("kaz")
+                .executes(context -> {
+                    isMining = !isMining;
+                    isFollowing = false;
+                    context.getSource().sendFeedback(Text.literal("§a[AdminMod] 10x10 Kazı Modu: " + (isMining ? "Aktif" : "Kapalı")));
+                    return 1;
+                })
+            );
 
-            dispatcher.register(literal("birak").executes(context -> {
-                dropJunkItems(MinecraftClient.getInstance());
-                context.getSource().sendFeedback(Text.literal("§e[AdminMod] Çöpler " + targetAdminName + " üstüne bırakılıyor."));
-                return 1;
-            }));
+            // /birak
+            dispatcher.register(ClientCommandManager.literal("birak")
+                .executes(context -> {
+                    dropJunkItems(MinecraftClient.getInstance());
+                    context.getSource().sendFeedback(Text.literal("§e[AdminMod] Çöpler " + targetAdminName + " üstüne bırakılıyor."));
+                    return 1;
+                })
+            );
         });
 
         ClientTickEvents.END_CLIENT_TICK.register(client -> {
@@ -65,7 +71,7 @@ public class AdminModClient implements ClientModInitializer {
         if (client.player == null) return;
         for (int i = 0; i < client.player.getInventory().size(); i++) {
             ItemStack stack = client.player.getInventory().getStack(i);
-            if (stack.isOf(Items.COBBLESTONE) || stack.isOf(Items.DIORITE) || 
+            if (stack.isOf(Items.COBBLESTONE) || stack.isOf(Items.DIORITE) ||
                 stack.isOf(Items.DIRT) || stack.isOf(Items.GRAVEL)) {
                 // Eşya bırakma simülasyonu
             }
