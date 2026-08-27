@@ -15,14 +15,15 @@ jobs:
           distribution: 'temurin'
           java-version: '21'
 
-      - name: Grant execute permission for gradlew
-        run: chmod +x gradlew
-
-      - name: Build with Gradle
-        run: ./gradlew build
+      - name: Build inside AdminMod folder
+        run: |
+          cd AdminMod
+          gradle wrapper --gradle-version 8.8
+          chmod +x gradlew
+          ./gradlew build
 
       - name: Upload Jar Artifact
         uses: actions/upload-artifact@v4
         with:
           name: AdminMod-Jar
-          path: build/libs/*.jar
+          path: AdminMod/build/libs/*.jar
