@@ -1,0 +1,22 @@
+{
+  "schemaVersion": 1,
+  "id": "adminmod",
+  "version": "1.0.0",
+  "name": "Admin Mod",
+  "description": "Admin takip ve kazim modu",
+  "authors": ["Sen"],
+  "contact": {},
+  "license": "MIT",
+  "environment": "client",
+  "entrypoints": {
+    "client": [
+      "com.admin.AdminModClient"
+    ]
+  },
+  "depends": {
+    "fabricloader": ">=0.15.0",
+    "minecraft": "~1.21",
+    "java": ">=21",
+    "fabric-api": "*"
+  }
+}
