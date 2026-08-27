@@ -18,7 +18,7 @@ jobs:
       - name: Build inside AdminMod folder
         run: |
           cd AdminMod
-          gradle wrapper --gradle-version 8.8
+          gradle wrapper --gradle-version 8.10
           chmod +x gradlew
           ./gradlew build
 
