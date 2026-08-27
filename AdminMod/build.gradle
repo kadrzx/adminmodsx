@@ -12,9 +12,17 @@ repositories {
 }
 
 dependencies {
+    // Minecraft
     minecraft 'com.mojang:minecraft:1.21'
+    
+    // Mappings
     mappings 'net.fabricmc:yarn:1.21+build.1:v2'
-    modImplementation 'net.fabricmc.fabric-api:fabric-api:0.97.0+1.21'
+    
+    // Fabric Loader (eksikti, ekledim)
+    modImplementation 'net.fabricmc:fabric-loader:0.15.11'
+    
+    // Fabric API (doğru sürüm)
+    modImplementation 'net.fabricmc.fabric-api:fabric-api:0.102.0+1.21'
 }
 
 java {
